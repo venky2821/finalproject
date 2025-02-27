@@ -99,7 +99,7 @@ jobs:
       - name: 'Run Tests'
         run: |-
           docker build --target test . -t app-tests
-          docker run app-tests
+          docker run --rm app-tests
 
       # Build the Docker image
       - name: 'Build and push Docker container'
