@@ -94,12 +94,15 @@ jobs:
           project_id: '${{secrets.GOOGLE_PROJECT_ID}}'
           service_account_key: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
           export_default_credentials: 'true'
-
+    
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:/app/backend" >> $GITHUB_ENV
+   
       # Run tests
       - name: 'Run Tests'
         run: |-
-          docker build --target test . -t app-tests
-          docker run --rm app-tests
+          export PYTHONPATH=$PYTHONPATH:/app/backend
+          pytest
 
       # Build the Docker image
       - name: 'Build and push Docker container'
