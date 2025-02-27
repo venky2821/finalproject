@@ -42,7 +42,7 @@ COPY --from=frontend-build /frontend/build frontend/build/
 # Copy necessary scripts and configurations
 COPY scripts/ scripts/
 COPY configs/ configs/
-RUN chmod +x scripts/*
+
 # Set environment variables
 ENV PORT=8000 \
     ENVIRONMENT=production
