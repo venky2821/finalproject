@@ -17,7 +17,7 @@ RUN npm run build
 FROM python-base as backend-deps
 WORKDIR /backend
 COPY Backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r Backend/requirements.txt
 
 # Testing stage
 FROM python-base as test
