@@ -15,6 +15,7 @@ RUN npm run build
 
 # Backend dependencies stage
 FROM python-base as backend-deps
+WORKDIR /backend
 COPY Backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -41,7 +42,7 @@ COPY --from=frontend-build /frontend/build frontend/build/
 # Copy necessary scripts and configurations
 COPY scripts/ scripts/
 COPY configs/ configs/
-
+RUN chmod +x scripts/*
 # Set environment variables
 ENV PORT=8000 \
     ENVIRONMENT=production
