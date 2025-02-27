@@ -16,10 +16,20 @@ jobs:
       - name: 'Checkout Repository'
         uses: 'actions/checkout@v4'
 
-      - name: 'Set up Docker'
+      - name: 'Install Docker'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
+          # Update the package list and install dependencies
+          sudo apt-get update -y
+          sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common lsb-release
+          
+          # Install Docker by using Docker's official install script
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          
+          # Verify Docker installation
+          sudo docker --version
 
       - name: 'Build Docker Image'
         run: |
