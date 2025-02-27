@@ -1,50 +1,98 @@
-name: 'Build and Run Docker on GitHub Runner'
+name: Deploy Full Stack App
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build-run-local:
-    name: 'Build and Run Docker Locally'
+  build_and_deploy:
+    name: Build and Deploy Full Stack Application
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: 'read'
-
     steps:
-      - name: 'Checkout Repository'
-        uses: 'actions/checkout@v4'
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: 'Install Docker'
-        run: |
-          # Update the package list and install dependencies
-          sudo apt-get update -y
-          sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common lsb-release
-          
-          # Install Docker by using Docker's official install script
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh get-docker.sh
-          sudo systemctl start docker
-          sudo systemctl enable docker
-          
-          # Verify Docker installation
-          sudo docker --version
+      # Step 2: Authenticate with GCP
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: 'Build Docker Image'
-        run: |
-          docker build -t my-app-local .
+      # Step 3: Set up Google Cloud SDK
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: 'Run Docker Container Locally'
-        run: |
-          docker run -d -p 8000:8000 my-app-local
+      # Step 4: Configure Docker for Google Container Registry (GCR)
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
 
-      - name: 'Verify Application is Running'
+      # Step 5: Build the Docker image using the provided Dockerfile
+      - name: Build Docker Image
         run: |
-          sleep 10  # Wait for a few seconds to ensure the app is running
-          curl http://localhost:8000  # Change this URL based on your app's endpoint
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/fastapi-backend .
 
-      - name: 'Clean up Docker'
+      # Step 6: Push the Docker image to Google Container Registry (GCR)
+      - name: Push Docker Image to GCR
         run: |
-          docker stop $(docker ps -q)
-          docker rm $(docker ps -a -q)
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/fastapi-backend
+
+      # Step 7: Deploy the Backend to Cloud Run
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy ${{ secrets.BACKEND_SERVICE_NAME }} \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/fastapi-backend \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --set-env-vars MONGO_URI=${{ secrets.MONGO_URI }} \
+            --port 8000
+
+      # Step 8: Install Node.js for frontend build
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Step 9: Install Frontend Dependencies
+      - name: Install Frontend Dependencies
+        run: npm install
+        working-directory: Frontend
+
+      # Step 10: Build Frontend
+      - name: Build Frontend
+        run: npm run build
+        working-directory: Frontend
+
+      # Step 11: Sync Frontend Build to GCS
+      - name: Sync Build to GCS
+        run: |
+          gsutil -m rsync -r Frontend/out gs://$FRONTEND_BUCKET_NAME
+
+      # Step 12: Set Public Access for the Frontend
+      - name: Set Public Access for Frontend
+        run: |
+          gsutil iam ch allUsers:objectViewer gs://$FRONTEND_BUCKET_NAME
+
+  # Optional Step: Run Tests if required
+  run_tests:
+    name: Run Tests (Optional)
+    runs-on: ubuntu-latest
+    needs: build_and_deploy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # Install Python dependencies for testing
+      - name: Install Testing Dependencies
+        run: |
+          docker build --target test . -t app-tests
+          docker run app-tests
