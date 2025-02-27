@@ -1,68 +1,40 @@
-name: 'Build and Deploy to GKE'
+name: 'Build and Run Docker on GitHub Runner'
 
 on:
   push:
     branches: [main]
-      
 
 jobs:
-  setup-build-publish-deploy:
-    name: 'Setup, Build, Publish, and Deploy'
-    runs-on: 'ubuntu-latest'
-    environment: 'production'
+  build-run-local:
+    name: 'Build and Run Docker Locally'
+    runs-on: ubuntu-latest
 
     permissions:
       contents: 'read'
-      id-token: 'write'
 
     steps:
-      - name: 'Checkout'
+      - name: 'Checkout Repository'
         uses: 'actions/checkout@v4'
 
-      - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
-
-      - name: 'Docker Auth'
-        uses: 'docker/login-action@v3'
-        with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.auth_token }}'
-          registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
-
-      - name: 'Install gcloud cli' 
-        uses: 'google-github-actions/setup-gcloud@v2'
-        with:
-          project_id: '${{secrets.GOOGLE_PROJECT_ID}}'
-          service_account_key: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-          export_default_credentials: 'true'
-
-      - name: 'Install dependencies'
+      - name: 'Set up Docker'
         run: |
-          python -m venv venv  # Set up a virtual environment
-          source venv/bin/activate
-          pip install -r Backend/requirements.txt
-          pip install pytest
+          sudo apt-get update
+          sudo apt-get install -y docker.io
 
-      - name: 'Run Tests'
+      - name: 'Build Docker Image'
         run: |
-          export PYTHONPATH=$PYTHONPATH:/app/backend  # Ensure the backend directory is included
-          pytest
+          docker build -t my-app-local .
 
-      - name: 'Build and push Docker container'
+      - name: 'Run Docker Container Locally'
         run: |
-          gcloud auth configure-docker us-central1-docker.pkg.dev
-          docker build --target final -t us-central1-docker.pkg.dev/valiant-complex-452116-b3/merchantinventory/merchantinventory:latest .
-          docker push us-central1-docker.pkg.dev/valiant-complex-452116-b3/merchantinventory/merchantinventory:latest
+          docker run -d -p 8000:8000 my-app-local
 
-      - name: 'Set up Kustomize'
+      - name: 'Verify Application is Running'
         run: |
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz
-          chmod u+x ./kustomize
+          sleep 10  # Wait for a few seconds to ensure the app is running
+          curl http://localhost:8000  # Change this URL based on your app's endpoint
 
-      - name: 'Deploy to GKE'
+      - name: 'Clean up Docker'
         run: |
-          ./kustomize edit set image LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG=$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA
-          ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/$DEPLOYMENT_NAME
+          docker stop $(docker ps -q)
+          docker rm $(docker ps -a -q)
