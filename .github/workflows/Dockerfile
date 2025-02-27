@@ -9,20 +9,18 @@ ENV PYTHONUNBUFFERED=1 \
 FROM node:18-alpine as frontend-build
 WORKDIR /frontend
 COPY Frontend/package*.json ./
-RUN npm install --frozen-lockfile
-COPY Frontend/ ./
+RUN npm install
+COPY Frontend/ .
 RUN npm run build
 
 # Backend dependencies stage
 FROM python-base as backend-deps
-WORKDIR /backend
-COPY Backend/ /app/backend/ .
-RUN pip install --no-cache-dir -r /app/backend/requirements.txt
+COPY Backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Testing stage
 FROM python-base as test
 WORKDIR /test
-ENV PYTHONPATH="/app/backend"
 COPY Testing/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY Testing/ .
@@ -41,8 +39,8 @@ COPY Backend/ backend/
 COPY --from=frontend-build /frontend/build frontend/build/
 
 # Copy necessary scripts and configurations
-# COPY scripts/ scripts/
-# COPY configs/ configs/
+COPY scripts/ scripts/
+COPY configs/ configs/
 
 # Set environment variables
 ENV PORT=8000 \
