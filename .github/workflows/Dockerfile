@@ -22,6 +22,7 @@ RUN pip install -r Backend/requirements.txt
 # Testing stage
 FROM python-base as test
 WORKDIR /test
+ENV PYTHONPATH="/app/backend"
 COPY Testing/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY Testing/ .
