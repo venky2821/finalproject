@@ -95,8 +95,10 @@ jobs:
           service_account_key: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
           export_default_credentials: 'true'
     
-      - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:/app/backend" >> $GITHUB_ENV
+      - name: 'Install dependencies '
+        run: |
+          pip install -r Backend/requirements.txt
+          pip install pytest
    
       # Run tests
       - name: 'Run Tests'
