@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED=1 \
 FROM node:18-alpine as frontend-build
 WORKDIR /frontend
 COPY Frontend/package*.json ./
-RUN npm install
+RUN npm install --frozen-lockfile
 COPY Frontend/ .
 RUN npm run build
 
