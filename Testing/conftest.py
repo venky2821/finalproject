@@ -1,5 +1,5 @@
 import pytest
-import from database import Base, get_db
+import from Backend.database import Base, get_db  # Adjust this based on your project structure
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import Base, get_db
