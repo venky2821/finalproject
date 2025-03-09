@@ -22,13 +22,18 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Testing stage
 FROM python-base as test
 WORKDIR /app
-COPY Backend/requirements.txt ./backend-requirements.txt
-COPY Testing/requirements.txt ./test-requirements.txt
-RUN pip install --no-cache-dir -r backend-requirements.txt -r test-requirements.txt
 
-# Copy backend and test code
+# Ensure requirements files are copied first to leverage Docker caching
+COPY Backend/requirements.txt test-requirements.txt ./
+
+# Update pip before installing dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt -r test-requirements.txt
+
+# Copy backend and test code after installing dependencies
 COPY Backend/ backend/
 COPY Testing/ testing/
+
 
 # Run tests
 CMD ["pytest", "testing/"]
