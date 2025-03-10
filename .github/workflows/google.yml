@@ -106,8 +106,8 @@ jobs:
       - name: 'Build and push Docker container'
         run: |-
           gcloud auth configure-docker us-central1-docker.pkg.dev
-          docker build --target final -t us-central1-docker.pkg.dev/valiant-complex-452116-b3/merchantinventory/merchantinventory:latest .
-          docker push us-central1-docker.pkg.dev/valiant-complex-452116-b3/merchantinventory/merchantinventory:latest
+          docker build --target final -t my-app:latest .
+          docker push my-app:latest
 
       # # Set up kustomize
       # - name: 'Set up Kustomize'
