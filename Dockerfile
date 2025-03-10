@@ -43,6 +43,7 @@ COPY Testing/ testing/
 
 # Ensure the configs directory exists before copying
 RUN mkdir -p /app/configs
+touch configs/config.yaml
 COPY configs/ configs/  
 
 # Default command (modify as needed)
@@ -64,6 +65,7 @@ COPY --from=frontend-build /frontend/build frontend/build/
 
 # Copy necessary scripts and configurations
 RUN mkdir -p /app/configs
+touch configs/config.yaml
 COPY configs/ configs/ 
 
 # Expose the port
