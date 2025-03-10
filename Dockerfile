@@ -43,7 +43,7 @@ COPY Testing/ testing/
 
 # Ensure the configs directory exists before copying
 RUN mkdir -p /app/configs
-COPY configs/ configs/ || true  # Ignore errors if the folder is missing
+COPY configs/ configs/  
 
 # Default command (modify as needed)
 CMD ["python", "-m", "your_app_module"]
@@ -63,9 +63,8 @@ COPY Backend/ backend/
 COPY --from=frontend-build /frontend/build frontend/build/
 
 # Copy necessary scripts and configurations
-COPY scripts/ scripts/
 RUN mkdir -p /app/configs
-COPY configs/ configs/ || true
+COPY configs/ configs/ 
 
 # Expose the port
 EXPOSE 8000
