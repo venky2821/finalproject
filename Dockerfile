@@ -21,14 +21,33 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Testing stage
 FROM python-base as test
+# Use a lightweight Python base image
+FROM python:3.11-slim
+
+# Set working directory
 WORKDIR /app
+
+# Install SQLite (only if required for system-level SQLite tools)
+RUN apt-get update && apt-get install -y sqlite3 libsqlite3-dev && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements files
 COPY Backend/requirements.txt ./backend-requirements.txt
 COPY Testing/requirements.txt ./test-requirements.txt
-RUN pip install --no-cache-dir -r backend-requirements.txt -r test-requirements.txt
+
+# Remove invalid sqlite>=3.0.0 from requirements files if not already done
+RUN sed -i '/sqlite>=3.0.0/d' backend-requirements.txt test-requirements.txt
+
+# Upgrade pip and install dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r backend-requirements.txt -r test-requirements.txt
 
 # Copy backend and test code
 COPY Backend/ backend/
 COPY Testing/ testing/
+
+# Default command (modify as needed)
+CMD ["python", "-m", "your_app_module"]
+
 
 # Run tests
 CMD ["pytest", "testing/"]
