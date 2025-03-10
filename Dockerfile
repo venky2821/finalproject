@@ -59,7 +59,6 @@ COPY Backend/ backend/
 COPY --from=frontend-build /frontend/build frontend/build/
 
 # Copy necessary scripts and configurations
-COPY scripts/ scripts/
 COPY configs/ configs/
 
 # Expose the port
