@@ -21,10 +21,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Testing stage
 FROM python-base as test
-# Use a lightweight Python base image
-FROM python:3.11-slim
-
-# Set working directory
 WORKDIR /app
 
 # Install SQLite (only if required for system-level SQLite tools)
@@ -45,9 +41,12 @@ RUN pip install --upgrade pip && \
 COPY Backend/ backend/
 COPY Testing/ testing/
 
+# Ensure the configs directory exists before copying
+RUN mkdir -p /app/configs
+COPY configs/ configs/ || true  # Ignore errors if the folder is missing
+
 # Default command (modify as needed)
 CMD ["python", "-m", "your_app_module"]
-
 
 # Run tests
 CMD ["pytest", "testing/"]
@@ -65,10 +64,11 @@ COPY --from=frontend-build /frontend/build frontend/build/
 
 # Copy necessary scripts and configurations
 COPY scripts/ scripts/
-COPY configs/ configs/
+RUN mkdir -p /app/configs
+COPY configs/ configs/ || true
 
 # Expose the port
 EXPOSE 8000
 
 # Command to run the application
-CMD ["python", "backend/main.py"] 
+CMD ["python", "backend/main.py"]
