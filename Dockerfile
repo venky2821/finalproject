@@ -16,6 +16,7 @@ RUN npm run build
 
 # Backend dependencies stage
 FROM python-base as backend-deps
+WORKDIR /app
 COPY Backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -23,8 +24,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 FROM python-base as test
 WORKDIR /app
 
-# Install SQLite (only if required for system-level SQLite tools)
-RUN apt-get update && apt-get install -y sqlite3 libsqlite3-dev && rm -rf /var/lib/apt/lists/*
+# Install SQLite & remove unnecessary packages after install
+RUN apt-get update && \
+    apt-get install -y sqlite3 libsqlite3-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy requirements files
 COPY Backend/requirements.txt ./backend-requirements.txt
@@ -41,17 +44,11 @@ RUN pip install --upgrade pip && \
 COPY Backend/ backend/
 COPY Testing/ testing/
 
-# Ensure the configs directory exists before copying
+# Ensure configs directory exists before copying
 RUN mkdir -p /app/configs
-COPY configs/ configs/  
+COPY configs/ configs/
 
-# Default command (modify as needed)
-CMD ["python", "-m", "your_app_module"]
-
-# Run tests
-CMD ["pytest", "testing/"]
-
-# Final stage
+# Final stage (Production)
 FROM python-base as final
 WORKDIR /app
 
@@ -63,8 +60,8 @@ COPY Backend/ backend/
 COPY --from=frontend-build /frontend/build frontend/build/
 
 # Copy necessary scripts and configurations
-RUN mkdir -p /app/configs
-COPY configs/ configs/ 
+COPY scripts/ scripts/
+COPY configs/ configs/
 
 # Expose the port
 EXPOSE 8000
