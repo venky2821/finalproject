@@ -99,10 +99,6 @@ jobs:
         run: |-
           mkdir -p configs
           touch configs/config.yaml  # Add a dummy file
-          cd Frontend
-          npm cache clean --force
-          npm install --legacy-peer-deps --verbose
-          npm list --depth=0
           docker build --no-cache --target test . -t app-tests
           docker run app-tests
 
