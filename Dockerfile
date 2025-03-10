@@ -13,7 +13,7 @@ COPY Frontend/package*.json ./
 RUN npm cache clean --force
 RUN npm install --legacy-peer-deps --verbose
 COPY Frontend/ .
-RUN npm run build
+RUN npm run build --verbose
 
 # Backend dependencies stage
 FROM python-base as backend-deps
