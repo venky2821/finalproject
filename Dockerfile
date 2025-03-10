@@ -1,10 +1,3 @@
-# Base stage for common dependencies
-FROM python:3.11-slim as python-base
-WORKDIR /app
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PYTHONPATH=/app
 
 # Frontend build stage
 FROM node:18-alpine as frontend-build
@@ -14,6 +7,14 @@ RUN npm cache clean --force
 RUN npm install --legacy-peer-deps --verbose
 COPY Frontend/ .
 RUN npm run build --verbose
+
+# Base stage for common dependencies
+FROM python:3.11-slim as python-base
+WORKDIR /app
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONPATH=/app
 
 # Backend dependencies stage
 FROM python-base as backend-deps
