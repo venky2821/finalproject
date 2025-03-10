@@ -38,5 +38,5 @@ jobs:
       - name: 'Build and push Docker container'
         run: |-
           gcloud auth configure-docker us-central1-docker.pkg.dev
-          docker build --target final -t my-app:latest .
+          docker build -t my-app:latest .
           docker push my-app:latest
