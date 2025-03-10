@@ -45,8 +45,7 @@ COPY Backend/ backend/
 COPY Testing/ testing/
 
 # Ensure configs directory exists before copying
-RUN mkdir -p /app/configs
-COPY configs/ configs/
+
 
 # Final stage (Production)
 FROM python-base as final
