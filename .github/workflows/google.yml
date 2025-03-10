@@ -97,7 +97,9 @@ jobs:
       # Run tests
       - name: 'Run Tests'
         run: |-
-          docker build --target test . -t app-tests
+          mkdir -p configs
+          touch configs/config.yaml  # Add a dummy file
+          docker build --no-cache --target test . -t app-tests
           docker run app-tests
 
       # Build the Docker image
