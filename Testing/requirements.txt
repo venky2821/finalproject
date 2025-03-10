@@ -6,4 +6,5 @@ sqlalchemy>=2.0.0
 python-multipart>=0.0.9
 python-jose[cryptography]>=3.3.0
 passlib[bcrypt]>=1.7.4
-Pillow>=10.0.0  # For image processing 
+Pillow>=10.0.0  # For image processing
+sqlite>=3.0.0  # SQLite database support
