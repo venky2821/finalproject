@@ -7,7 +7,7 @@ RUN npm cache clean --force
 RUN npm install --legacy-peer-deps --verbose
 RUN npm list --depth=0
 COPY Frontend/ .
-RUN npm run build 
+RUN npm run build --verbose
 
 # Base stage for common dependencies
 FROM python:3.11-slim as python-base
