@@ -33,6 +33,13 @@ jobs:
         run: |-
           mkdir -p configs
           touch configs/config.yaml  # Add a dummy file
+          cd Frontend
+          npm cache clean --force
+          npm install --legacy-peer-deps --verbose
+          NODE_OPTIONS="--max_old_space_size=4096" npm run build
+        env:
+          CI: false  # Prevents warnings from failing the build
+
           
       # Build the Docker image
       - name: 'Build and push Docker container'
