@@ -31,7 +31,7 @@ jobs:
       # Build the Docker image
       - name: Build Docker image
         run: |
-            docker build -t my-image .
+            docker build -t image .
             docker images 
             docker ps
         #  docker build -t your-username/your-image-name:latest .
