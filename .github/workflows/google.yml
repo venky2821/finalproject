@@ -1,43 +1,49 @@
-
-name: 'Build and Deploy to GKE'
+name: CI/CD Workflow
 
 on:
   push:
     branches: [main]
-
+       
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  setup-build-publish-deploy:
-    name: 'Setup, Build, Publish, and Deploy'
-    runs-on: 'ubuntu-latest'
-    environment: 'production'
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
-        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # Install gcloud cli
-      - name: 'Install gcloud cli' 
-        uses: 'google-github-actions/setup-gcloud@v2'
-        with:
-          project_id: '${{secrets.GOOGLE_PROJECT_ID}}'
-          service_account_key: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-          export_default_credentials: 'true'
-
-      # Run tests
+      # Log into DockerHub (or any other registry)
+    #  - name: Log in to Docker Hub
+     #   uses: docker/login-action@v2
+      #  with:
+        #  username: ${{ secrets.DOCKER_USERNAME }}
+         # password: ${{ secrets.DOCKER_PASSWORD }}
+          
       - name: 'Run Tests'
         run: |-
           mkdir -p configs
           touch configs/config.yaml  # Add a dummy file
-        
-          
+
       # Build the Docker image
-      - name: 'Build and push Docker container'
-        run: |-
-          gcloud auth configure-docker us-central1-docker.pkg.dev
-          docker build -t my-app:latest .
-          docker push my-app:latest
+      - name: Build Docker image
+        run: |
+            docker build -t my-image .
+            docker images 
+            docker ps
+        #  docker build -t your-username/your-image-name:latest .
+
+      # Push the Docker image to Docker Hub (or AWS ECR)
+     # - name: Push Docker image
+      #  run: |
+       #   docker push your-username/your-image-name:latest
+
+      # Deploy the image (optional step, depends on the platform)
+      # Example for deploying to AWS ECS, replace with your platform-specific steps
+     # - name: Deploy to AWS ECS
+      #  run: |
+          # Example ECS deployment script
+        #  aws ecs update-service --cluster your-cluster-name --service your-service-name --force-new-deployment
