@@ -1,5 +1,8 @@
-# Use the official Grafana image as the base
-FROM grafana/grafana
+# Start from Grafana base image
+FROM grafana/grafana:latest
 
-# Expose port 3001 for the Grafana web interface
+# Expose Grafana port
 EXPOSE 3000
+
+# Start Grafana server
+CMD [ "/run.sh" ]
