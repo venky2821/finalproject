@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Package, LogOut, Calendar } from "lucide-react"
+import { Package, LogOut, Calendar, X, Bell, Truck, Layers, ShoppingCart, MessageSquare, Camera, BarChart2 } from "lucide-react"
 import { useNavigate, Link } from "react-router-dom"
 import { useUser } from "../hooks/useUser"
 import CustomerPage from "./CustomerPage"
@@ -191,50 +191,62 @@ const HomePage: React.FC = () => {
 
   if (user?.role_id === 1) {
     return (
-      <div className="min-h-screen bg-gray-100">
-        <nav className="bg-blue-600 text-white p-4">
+      <div className="min-h-screen bg-gray-50/80">
+        <nav className="bg-gradient-to-r from-brand-pink to-brand-blue text-white p-4 shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-90">
           <div className="container mx-auto flex justify-between items-center">
-            <div className="flex items-center">
-              <img
-                src="/valpo-logo.png"
-                alt="Valpo Velvet Logo"
-                className="h-12 sm:h-14 md:h-16 object-contain"
-              />
-              {/* <h1 className="text-2xl font-bold">Merchandise Inventory Manager</h1> */}
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 sm:w-14 md:w-16 aspect-square">
+                  <img
+                    src="/valpo-icon.svg"
+                    alt="Valpo Velvet Icon"
+                    className="w-full h-full object-contain hover:scale-105 transition-transform"
+                  />
+                </div>
+                <div className="h-8 sm:h-10 md:h-12 relative">
+                  <img
+                    src="/valpo-text.svg"
+                    alt="Valpo Velvet"
+                    className="h-full w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+                  />
+                </div>
+              </div>
+              <div className="h-8 w-px bg-white/20 hidden md:block"></div>
+              <h1 className="text-xl md:text-2xl font-bold hidden md:block text-white/90">
+                Merchandise Inventory Manager
+              </h1>
             </div>
             <div className="flex items-center gap-4">
               <div className="relative">
                 <button
                   onClick={() => setShowDateRangeModal(true)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-600 transition-colors"
+                  className="bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-white/20 transition-colors border border-white/20"
                 >
                   <Calendar className="w-5 h-5" />
                   Export Reports
                 </button>
                 {showDateRangeModal && (
-                  <div className="absolute right-0 mt-2 w-96 bg-gray-800 rounded-lg shadow-lg p-4 z-10 border border-gray-700">
+                  <div className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl p-6 z-10 border border-brand-blue/10">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-semibold text-white">Export Report</h3>
+                      <h3 className="text-lg font-semibold text-gray-800">Export Report</h3>
                       <button
                         onClick={() => {
                           setShowDateRangeModal(false);
                           setDateRange({ startDate: "", endDate: "" });
-                          setSelectedReport(''); // Reset selection
+                          setSelectedReport('');
                         }}
-                        className="text-gray-300 hover:text-white"
+                        className="text-gray-500 hover:text-gray-700"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <X className="w-5 h-5" />
                       </button>
                     </div>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-200 mb-1">Report Type</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
                         <select
                           value={selectedReport}
                           onChange={(e) => setSelectedReport(e.target.value)}
-                          className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-brand-blue focus:border-transparent"
                         >
                           <option value="">Select a report type</option>
                           {reportTypes.map((report) => (
@@ -245,33 +257,33 @@ const HomePage: React.FC = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-200 mb-1">Start Date</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
                         <input
                           type="date"
                           value={dateRange.startDate}
                           onChange={(e) => handleDateChange(e, 'startDate')}
-                          className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-brand-blue focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-200 mb-1">End Date</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
                         <input
                           type="date"
                           value={dateRange.endDate}
                           onChange={(e) => handleDateChange(e, 'endDate')}
-                          className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-brand-blue focus:border-transparent"
                         />
                       </div>
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleExport('csv')}
-                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                          className="flex-1 bg-brand-green text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
                         >
                           Export CSV
                         </button>
                         <button
                           onClick={() => handleExport('pdf')}
-                          className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                          className="flex-1 bg-brand-orange text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
                         >
                           Export PDF
                         </button>
@@ -280,64 +292,118 @@ const HomePage: React.FC = () => {
                   </div>
                 )}
               </div>
-              <button onClick={handleLogout} className="flex items-center bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded">
+              <button 
+                onClick={handleLogout} 
+                className="bg-white/10 backdrop-blur-sm hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg flex items-center transition-colors"
+              >
                 <LogOut className="w-5 h-5 mr-2" />
                 Logout
               </button>
             </div>
           </div>
         </nav>
-        <div className="container mx-auto p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow">
+
+        <main className="container mx-auto p-6 space-y-8">
+          {/* Dashboard Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white shadow-md hover:shadow-xl rounded-lg p-6 transition-all duration-200 border-l-4 border-brand-blue">
+              <div className="flex items-center gap-3 mb-4">
+                <Package className="w-5 h-5 text-brand-blue" />
+                <h2 className="text-lg font-semibold text-gray-800">Inventory Management</h2>
+              </div>
               <InventoryList inventory={inventory} refreshInventory={fetchProducts} />
             </div>
 
-            <Link to="/alerts" className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow">
+            <Link to="/alerts" className="group bg-white shadow-md hover:shadow-xl rounded-lg p-6 transition-all duration-200 border-l-4 border-brand-pink">
+              <div className="flex items-center gap-3 mb-4">
+                <Bell className="w-5 h-5 text-brand-pink" />
+                <h2 className="text-lg font-semibold text-gray-800 group-hover:text-brand-pink transition-colors">Stock Alerts</h2>
+              </div>
               <StockAlerts inventory={inventory} />
             </Link>
-            <div className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow overflow-visible">
+
+            <div className="bg-white shadow-md hover:shadow-xl rounded-lg p-6 transition-all duration-200 border-l-4 border-brand-yellow overflow-visible">
+              <div className="flex items-center gap-3 mb-4">
+                <Truck className="w-5 h-5 text-brand-yellow" />
+                <h2 className="text-lg font-semibold text-gray-800">Supplier Integration</h2>
+              </div>
               <SupplierIntegration inventory={inventory} fetchInventory={fetchProducts} />
             </div>
-            <Link to="/batches" className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow">
-              <h2 className="text-lg font-semibold">Batch Tracking</h2>
+
+            <Link to="/batches" className="group bg-white shadow-md hover:shadow-xl rounded-lg p-6 transition-all duration-200 border-l-4 border-brand-green">
+              <div className="flex items-center gap-3">
+                <Layers className="w-5 h-5 text-brand-green" />
+                <h2 className="text-lg font-semibold group-hover:text-brand-green transition-colors">Batch Tracking</h2>
+              </div>
             </Link>
-            <Link to="/approve-purchases" className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow">
-              <h2 className="text-lg font-semibold">Manage Orders</h2>
+
+            <Link to="/approve-purchases" className="group bg-white shadow-md hover:shadow-xl rounded-lg p-6 transition-all duration-200 border-l-4 border-brand-orange">
+              <div className="flex items-center gap-3">
+                <ShoppingCart className="w-5 h-5 text-brand-orange" />
+                <h2 className="text-lg font-semibold group-hover:text-brand-orange transition-colors">Manage Orders</h2>
+              </div>
             </Link>
-            <Link to="/approve-customer-reviews" className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow">
-              <h2 className="text-lg font-semibold">Customer Reviews</h2>
-            </Link>
-            <Link
-              to="/analytics"
-              className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow col-span-full"
-            >
-              <Analytics inventory={inventory} />
+
+            <Link to="/approve-customer-reviews" className="group bg-white shadow-md hover:shadow-xl rounded-lg p-6 transition-all duration-200 border-l-4 border-brand-blue">
+              <div className="flex items-center gap-3">
+                <MessageSquare className="w-5 h-5 text-brand-blue" />
+                <h2 className="text-lg font-semibold group-hover:text-brand-blue transition-colors">Customer Reviews</h2>
+              </div>
             </Link>
           </div>
-          <div className="container mx-auto p-6 bg-gray-100 mt-6">
-            <h1 className="text-3xl font-bold mt-6 text-center text-gray-800">Photos Pending Approval</h1>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-              {photosToApprove.map(photo => (
-                <div key={photo.id} className="bg-white shadow-md rounded-lg p-4">
-                  <img src={photo.url} alt="Uploaded" className="w-full h-48 object-cover rounded-lg mb-2" />
-                  <p className="text-gray-600">Category: {photo.category}</p>
-                  <div className="flex justify-between mt-4">
-                    <button onClick={() => handleApprovePhoto(photo.id)} className="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>
-                    <button onClick={() => handleRejectPhoto(photo.id)} className="bg-red-500 text-white px-4 py-2 rounded-lg">Reject</button>
+
+          {/* Analytics Section */}
+          <div className="bg-white shadow-md hover:shadow-xl rounded-lg p-6 transition-all duration-200 border-l-4 border-brand-pink">
+            <div className="flex items-center gap-3 mb-4">
+              <BarChart2 className="w-5 h-5 text-brand-pink" />
+              <h2 className="text-lg font-semibold text-gray-800">Analytics Overview</h2>
+            </div>
+            <Analytics inventory={inventory} />
+          </div>
+
+          {/* Photos Section */}
+          <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-200">
+            <div className="p-6 border-b">
+              <div className="flex items-center gap-3">
+                <Camera className="w-5 h-5 text-brand-blue" />
+                <h2 className="text-lg font-semibold text-gray-800">Photos Pending Approval</h2>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {photosToApprove.map(photo => (
+                  <div key={photo.id} className="bg-gray-50 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-200">
+                    <img src={photo.url} alt="Uploaded" className="w-full h-48 object-cover" />
+                    <div className="p-4">
+                      <p className="text-gray-600 mb-4">Category: {photo.category}</p>
+                      <div className="flex justify-between gap-4">
+                        <button 
+                          onClick={() => handleApprovePhoto(photo.id)} 
+                          className="bg-brand-green text-white px-4 py-2 rounded-lg flex-1 hover:bg-opacity-90 transition-colors"
+                        >
+                          Approve
+                        </button>
+                        <button 
+                          onClick={() => handleRejectPhoto(photo.id)} 
+                          className="bg-brand-pink text-white px-4 py-2 rounded-lg flex-1 hover:bg-opacity-90 transition-colors"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
-    )
+    );
   } else if (user?.role_id === 2) {
-    return <CustomerPage />
+    return <CustomerPage />;
   }
 
-  return <div>Please log in.</div>
-}
+  return <div>Please log in.</div>;
+};
 
-export default HomePage
+export default HomePage;
