@@ -11,6 +11,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          pink: "#E8A5B1",  // Soft rose pink
+          blue: "#3B5FD9",  // Vibrant royal blue
+          yellow: "#F4C430", // Golden yellow
+          green: "#7AB87A",  // Soft green
+          orange: "#FF7F50", // Coral orange
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -22,12 +29,12 @@ const config: Config = {
           foreground: "hsl(var(--popover-foreground))",
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#E8A5B1", // Using brand pink as primary
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#3B5FD9", // Using brand blue as secondary
+          foreground: "#FFFFFF",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
