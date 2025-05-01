@@ -71,9 +71,11 @@ Feel free to fork this repository and submit pull requests. For major changes, p
 ### Running Tests
 To run the unit tests for the backend functionalities, navigate to the root directory and execute:
 
-```bash
+```bash![vv-cone-2000x2000-transparent-bg](https://github.com/user-attachments/assets/5e8992c5-7589-4911-90b7-f79bbe842c20)
+
 pytest Testing/test_login.py
 ```
+![logos-for-square-2000x2000-transprent-bg](https://github.com/user-attachments/assets/603647de-5e82-46be-b8ba-5882fec3f387)
 
 ### Test Coverage
 The tests cover the following functionalities:
