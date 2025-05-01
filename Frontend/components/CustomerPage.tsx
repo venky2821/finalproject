@@ -189,13 +189,13 @@ const CustomerPage: React.FC = () => {
 
             // Refresh orders
             const ordersRes = await fetch('http://localhost:8000/orders/customer', {
-                headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
             }).then(res => res.json());
             setReservedOrders(ordersRes);
         } catch (error: unknown) {
             console.error("Error during reservation:", error);
             if (error instanceof Error) {
-                alert(error.message || "Reservation failed");
+            alert(error.message || "Reservation failed");
             } else {
                 alert("Reservation failed");
             }
@@ -292,11 +292,11 @@ const CustomerPage: React.FC = () => {
                 img.src = event.target?.result as string;
 
                 img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
 
-                    if (!ctx) {
-                        return reject(new Error("Canvas is not supported"));
+                        if (!ctx) {
+                            return reject(new Error("Canvas is not supported"));
                     }
 
                     // Set canvas size to match image
@@ -374,8 +374,8 @@ const CustomerPage: React.FC = () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
+                    'Authorization': `Bearer ${localStorage.getItem("token")}` 
+                 }
             });
 
             if (response.ok) {
@@ -398,8 +398,8 @@ const CustomerPage: React.FC = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
+                    'Authorization': `Bearer ${localStorage.getItem("token")}` 
+                 },
             });
 
             if (response.ok) {
@@ -422,11 +422,11 @@ const CustomerPage: React.FC = () => {
     const renderContent = () => {
         switch (activeSection) {
             case 'products':
-                return (
+    return (
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <h1 className="text-2xl font-bold text-gray-800">Our Products</h1>
-                            <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4">
                                 <button
                                     onClick={() => setShowWishlist(true)}
                                     className="relative"
@@ -438,19 +438,19 @@ const CustomerPage: React.FC = () => {
                                         </span>
                                     )}
                                 </button>
-                                <button onClick={() => setShowCart(true)} className="relative">
+                    <button onClick={() => setShowCart(true)} className="relative">
                                     <ShoppingCart className="w-6 h-6 text-gray-600" />
-                                    {Object.keys(cart).length > 0 && (
+                        {Object.keys(cart).length > 0 && (
                                         <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                                             {Object.keys(cart).length}
                                         </span>
-                                    )}
-                                </button>
+                        )}
+                    </button>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {products.map(product => (
-                                <div key={product.id} className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div key={product.id} className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow border-l-4 border-brand-blue">
                                     {/* <img src={product.image_url} alt={product.name} className="w-full h-48 object-cover rounded-lg mb-4" /> */}
                                     <div className="w-full h-48 flex items-center justify-center bg-white rounded-lg overflow-hidden">
                                         <Carousel showThumbs={false}>
@@ -468,29 +468,20 @@ const CustomerPage: React.FC = () => {
                                     <div className="flex gap-2 mt-4">
                                         <button
                                             onClick={() => handleAddToCart(product)}
-                                            className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md flex-1 hover:bg-green-600 transition-colors"
+                                            className="bg-brand-green text-white px-4 py-2 rounded-lg shadow-md flex-1 hover:bg-opacity-90 transition-colors"
                                         >
                                             Add to Cart
                                         </button>
 
                                         <button
                                             onClick={() => product.is_in_wishlist ? handleRemoveFromWishlist(product.id) : handleAddToWishlist(product)}
-                                            className={`px-4 py-2 rounded-lg shadow-md flex items-center gap-2 transition-colors ${product.is_in_wishlist
-                                                ? 'bg-red-500 text-white hover:bg-red-600'
+                                            className={`px-4 py-2 rounded-lg shadow-md flex items-center gap-2 transition-colors ${
+                                                product.is_in_wishlist
+                                                ? 'bg-brand-pink text-white hover:bg-opacity-90'
                                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                }`}
+                                            }`}
                                         >
-                                            {product.is_in_wishlist ? (
-                                                <>
-                                                    <Heart className="w-5 h-5 fill-current" />
-                                                    {/* In Wishlist */}
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Heart className="w-5 h-5" />
-                                                    {/* Add to Wishlist */}
-                                                </>
-                                            )}
+                                            <Heart className={`w-5 h-5 ${product.is_in_wishlist ? 'fill-current' : ''}`} />
                                         </button>
                                     </div>
                                 </div>
@@ -537,7 +528,7 @@ const CustomerPage: React.FC = () => {
                         <div className="bg-white shadow-md rounded-lg p-6">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-xl font-semibold text-gray-800">Gallery</h2>
-                                <select
+                                    <select
                                     value={selectedCategory}
                                     onChange={(e) => setSelectedCategory(e.target.value)}
                                     className="border rounded-lg px-3 py-1"
@@ -602,12 +593,12 @@ const CustomerPage: React.FC = () => {
                                         className="w-full border rounded-lg p-2"
                                     />
                                 </div>
-                                <button
+                                    <button
                                     type="submit"
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-600 transition-colors"
-                                >
+                                    className="bg-brand-blue text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-opacity-90 transition-colors"
+                                    >
                                     <Upload className="w-5 h-5" /> Submit Review
-                                </button>
+                                    </button>
                             </form>
                         </div>
                         <div className="bg-white shadow-md rounded-lg p-6">
@@ -673,7 +664,7 @@ const CustomerPage: React.FC = () => {
                                             {order.status === "reserved" && (
                                                 <button
                                                     onClick={() => handleCancelOrder(order.id)}
-                                                    className="bg-red-500 text-white px-4 py-2 rounded-lg w-full hover:bg-red-600 transition-colors"
+                                                    className="bg-brand-pink text-white px-4 py-2 rounded-lg w-full hover:bg-opacity-90 transition-colors"
                                                 >
                                                     Cancel Order
                                                 </button>
@@ -681,7 +672,7 @@ const CustomerPage: React.FC = () => {
                                             {order.status === "completed" && (
                                                 <button
                                                     onClick={() => handleReorder(order.id)}
-                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full hover:bg-blue-600 transition-colors"
+                                                    className="bg-brand-blue text-white px-4 py-2 rounded-lg w-full hover:bg-opacity-90 transition-colors"
                                                 >
                                                     Reorder
                                                 </button>
@@ -701,13 +692,28 @@ const CustomerPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Top Navigation */}
-            <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 shadow-lg">
+            <nav className="bg-gradient-to-r from-brand-pink to-brand-blue text-white p-4 shadow-lg">
                 <div className="container mx-auto flex justify-between items-center">
-                    <h1 className="text-2xl font-bold">Valpo Velvet</h1>
+                    <div className="flex items-center gap-4">
+                        <div className="relative w-12 sm:w-14 md:w-16 aspect-square">
+                            <img
+                                src="/valpo-icon.svg"
+                                alt="Valpo Velvet Icon"
+                                className="w-full h-full object-contain hover:scale-105 transition-transform"
+                            />
+                        </div>
+                        <div className="h-8 sm:h-10 md:h-12 relative">
+                            <img
+                                src="/valpo-text.svg"
+                                alt="Valpo Velvet"
+                                className="h-full w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+                            />
+                        </div>
+                    </div>
                     <div className="relative">
                         <button 
                             onClick={() => setShowProfileMenu(!showProfileMenu)}
-                            className="flex items-center gap-2 hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors"
+                            className="flex items-center gap-2 hover:bg-brand-pink/20 px-4 py-2 rounded-lg transition-colors"
                         >
                             <User className="w-5 h-5" />
                             Profile
@@ -716,7 +722,7 @@ const CustomerPage: React.FC = () => {
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
                                 <button
                                     onClick={handleLogout}
-                                    className="flex items-center gap-2 w-full px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                    className="flex items-center gap-2 w-full px-4 py-2 text-gray-800 hover:bg-brand-pink/10"
                                 >
                                     <LogOut className="w-5 h-5" />
                                     Logout
@@ -735,40 +741,44 @@ const CustomerPage: React.FC = () => {
                         <div className="bg-white rounded-lg shadow-md p-4 space-y-2">
                             <button
                                 onClick={() => setActiveSection('products')}
-                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${activeSection === 'products'
-                                    ? 'bg-blue-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                                    }`}
+                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
+                                    activeSection === 'products'
+                                    ? 'bg-brand-blue text-white'
+                                    : 'text-gray-600 hover:bg-brand-blue/10'
+                                }`}
                             >
                                 <Home className="w-5 h-5" />
                                 Products
                             </button>
                             <button
                                 onClick={() => setActiveSection('photos')}
-                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${activeSection === 'photos'
-                                    ? 'bg-blue-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                                    }`}
+                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
+                                    activeSection === 'photos'
+                                    ? 'bg-brand-blue text-white'
+                                    : 'text-gray-600 hover:bg-brand-blue/10'
+                                }`}
                             >
                                 <IconImage className="w-5 h-5" />
                                 Photos
                             </button>
                             <button
                                 onClick={() => setActiveSection('reviews')}
-                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${activeSection === 'reviews'
-                                    ? 'bg-blue-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                                    }`}
+                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
+                                    activeSection === 'reviews'
+                                    ? 'bg-brand-blue text-white'
+                                    : 'text-gray-600 hover:bg-brand-blue/10'
+                                }`}
                             >
                                 <MessageSquare className="w-5 h-5" />
                                 Reviews
                             </button>
                             <button
                                 onClick={() => setActiveSection('orders')}
-                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${activeSection === 'orders'
-                                    ? 'bg-blue-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                                    }`}
+                                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
+                                    activeSection === 'orders'
+                                    ? 'bg-brand-blue text-white'
+                                    : 'text-gray-600 hover:bg-brand-blue/10'
+                                }`}
                             >
                                 <History className="w-5 h-5" />
                                 Orders
@@ -784,40 +794,40 @@ const CustomerPage: React.FC = () => {
             </div>
 
             {/* Cart Modal */}
-            {showCart && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                        <button
-                            onClick={() => setShowCart(false)}
-                            className="absolute top-2 right-2 text-gray-600 hover:text-black"
-                        >
-                            <X className="w-6 h-6" />
-                        </button>
+                    {showCart && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                            <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                                <button
+                                    onClick={() => setShowCart(false)}
+                                    className="absolute top-2 right-2 text-gray-600 hover:text-black"
+                                >
+                                    <X className="w-6 h-6" />
+                                </button>
                         <h2 className="text-xl font-bold mb-4">Your Cart</h2>
-                        {Object.keys(cart).length > 0 ? (
+                                {Object.keys(cart).length > 0 ? (
                             <>
                                 <ul className="space-y-2">
-                                    {Object.entries(cart).map(([productId, { product, quantity }]) => (
-                                        <li key={product.id} className="border-b py-2 flex justify-between items-center">
-                                            <div>
-                                                {product.name} - ${product.price} x
-                                                <input
-                                                    type="number"
-                                                    min="1"
-                                                    value={quantity}
-                                                    onChange={(e) => handleUpdateQuantity(product.id, Number(e.target.value))}
-                                                    className="border mx-2 w-12 text-center"
-                                                />
-                                            </div>
-                                            <button
-                                                onClick={() => handleRemoveFromCart(product.id)}
-                                                className="text-red-500 hover:text-red-700"
-                                            >
-                                                <X size={18} />
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
+                                        {Object.entries(cart).map(([productId, { product, quantity }]) => (
+                                            <li key={product.id} className="border-b py-2 flex justify-between items-center">
+                                                <div>
+                                                    {product.name} - ${product.price} x
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        value={quantity}
+                                                        onChange={(e) => handleUpdateQuantity(product.id, Number(e.target.value))}
+                                                        className="border mx-2 w-12 text-center"
+                                                    />
+                                                </div>
+                                                <button
+                                                    onClick={() => handleRemoveFromCart(product.id)}
+                                                    className="text-red-500 hover:text-red-700"
+                                                >
+                                                    <X size={18} />
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 <div className="mt-4 pt-4 border-t">
                                     <p className="text-lg font-bold">
                                         Total: ${Object.values(cart).reduce((sum, { product, quantity }) => sum + product.price * quantity, 0)}
@@ -833,9 +843,9 @@ const CustomerPage: React.FC = () => {
                         ) : (
                             <p className="text-gray-500">Your cart is empty.</p>
                         )}
-                    </div>
-                </div>
-            )}
+                            </div>
+                        </div>
+                    )}
 
             {/* Wishlist Modal */}
             {showWishlist && (
@@ -855,7 +865,7 @@ const CustomerPage: React.FC = () => {
                                         <li key={product.id} className="border-b py-2 flex justify-between items-center">
                                             <div>
                                                 {product.name} - ${product.price}
-                                            </div>
+                </div>
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => handleAddToCart(product)}
@@ -869,15 +879,15 @@ const CustomerPage: React.FC = () => {
                                                 >
                                                     <X size={18} />
                                                 </button>
-                                            </div>
+            </div>
                                         </li>
                                     ))}
                                 </ul>
                             </>
                         ) : (
                             <p className="text-gray-500">Your wishlist is empty.</p>
-                        )}
-                    </div>
+                                )}
+                            </div>
                 </div>
             )}
         </div>
