@@ -22,9 +22,8 @@ jobs:
 
     - name: Build and tag Docker Compose services
       run: |
-        docker-compose build
-        docker tag myreactapp ${{ secrets.AZURE_CONTAINER_REGISTRY }}/myreactapp:latest
-        docker tag myfastapi ${{ secrets.AZURE_CONTAINER_REGISTRY }}/myfastapi:latest
+        docker build -f Dockerfile.frontend -t ${{ secrets.AZURE_CONTAINER_REGISTRY }}/myreactapp:latest
+        docker build -f Dockerfile.backend -t ${{ secrets.AZURE_CONTAINER_REGISTRY }}/myfastapi:latest
 
     - name: Push images to ACR
       run: |
